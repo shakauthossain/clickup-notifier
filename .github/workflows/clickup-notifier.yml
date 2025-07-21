@@ -2,7 +2,8 @@ name: ClickUp Task Notifier
 
 on:
   schedule:
-    - cron: '20 3 * * 0-4'  # Run at 09:20 AM BDT (03:20 UTC) Sunday to Thursday
+    - cron: '10 3 * * 0-4'  # Run at 09:10 AM BDT (03:10 UTC) Sunday to Thursday
+    - cron: '0 12 * * 0-4'  # Run at 06:00 PM BDT (12:00 UTC) Sunday to Thursday
   workflow_dispatch:
 
 jobs:

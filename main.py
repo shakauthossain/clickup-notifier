@@ -32,19 +32,28 @@ def get_tasks(list_id):
     data = resp.json()
     tasks = data.get("tasks", [])
 
-    # Filter tasks due today
     tz = pytz.timezone(TIMEZONE)
     today = datetime.now(tz).date()
 
-    today_tasks = []
+    filtered_tasks = []
     for task in tasks:
         due_ts = task.get("due_date")
+        status = task.get("status", {}).get("status", "").lower()
+
+        # Optional: skip completed tasks
+        if status in ["done", "complete", "completed"]:
+            continue
+
+        # Show tasks due today or later, OR with no due date
         if due_ts:
             due_dt = datetime.fromtimestamp(int(due_ts) / 1000, tz).date()
-            if due_dt == today:
-                today_tasks.append(task)
+            if due_dt >= today:
+                filtered_tasks.append(task)
+        # else:
+        #     # No due date? Still include it
+        #     filtered_tasks.append(task)
 
-    return today_tasks
+    return filtered_tasks
 
 # === SEND TO TELEGRAM ===
 def send_to_telegram(message):
